@@ -1,1 +1,42 @@
-🎂 Bday-letter : L'Histoire de ton Jour — Harry 🌅An elegant, interactive birthday book web application designed as a deeply personal and artistic gift for Harry.Built with a poetic twilight-sunset gradient background and premium typography, this digital keepsake weaves together the unique cosmic, historical, and cultural threads of Harry's birth date: September 17, 2004 in Montreal, Canada.✨ Core Features📱 Fluid Mobile DesignSmooth, card-style slide transitions engineered specifically to look stunning on iOS and Android devices, as well as desktop viewports.🔮 Cosmic & Astrological BlueprintA thoughtful analysis of Harry's cosmic markers, highlighting his Virgo sun qualities, Libra moon emotional profile, and planetary influences.📜 Historical & Global RootsExplores global traditions connected to September 17, mapping Christian heritage, Islamic (Hijri) dates, and the Indigenous Harvest Moon symbolism.🎵 Retro 2004 Time CapsuleRelives the exact weather conditions in Montreal, regional pop culture, tech trends (iPods, Messenger), and hit music tracks from the day he was born.⏳ Life Milestone CounterProvides a fascinating statistical perspective of days lived, hours passed, total heartbeats, and outlines specific "secret calendar milestones."🚀 Future Decades JourneyA warm, encouraging timeline projecting forward into major life eras and milestones all the way up to the horizon of 2071.📷 Polaroid Style Photo FramesSpecially coded media placeholders tailored to cleanly hold personal family photos directly inside the app layout.💾 One-Click Print-to-PDFA built-in print override engine that instantly reformats the digital cards into an A4 portrait layout, ready to print as a physical book.🛠️ Technology Stack🌐 Frontend Layout: Pure HTML5 structure paired with custom responsive CSS3 mechanics.⚡ Application Logic: Lightweight, vanilla JavaScript for instant slide navigation (completely independent of external frame engines).✍️ Typography Architecture: Hand-curated Google Font pairs featuring Playfair Display (editorial, literary serif) and Inter (clean, readable sans-serif).
+# 🎂 Bday-letter : L'Histoire de ton Jour — Harry 🌅
+
+An elegant, interactive birthday book web application designed as a deeply personal and artistic gift for Harry. 
+
+Built with a poetic twilight-sunset gradient background and premium typography, this digital keepsake weaves together the unique cosmic, historical, and cultural threads of Harry's birth date: **September 17, 2004** in Montreal, Canada.
+
+---
+
+### ✨ Core Features
+
+* 📱 **Fluid Mobile Design** 
+  Smooth, card-style slide transitions engineered specifically to look stunning on iOS and Android devices, as well as desktop viewports.
+
+* 🔮 **Cosmic & Astrological Blueprint** 
+  A thoughtful analysis of Harry's cosmic markers, highlighting his Virgo sun qualities, Libra moon emotional profile, and planetary influences.
+
+* 📜 **Historical & Global Roots** 
+  Explores global traditions connected to September 17, mapping Christian heritage, Islamic (Hijri) dates, and the Indigenous Harvest Moon symbolism.
+
+* 🎵 **Retro 2004 Time Capsule** 
+  Relives the exact weather conditions in Montreal, regional pop culture, tech trends (iPods, Messenger), and hit music tracks from the day he was born.
+
+* ⏳ **Life Milestone Counter** 
+  Provides a fascinating statistical perspective of days lived, hours passed, total heartbeats, and outlines specific "secret calendar milestones."
+
+* 🚀 **Future Decades Journey** 
+  A warm, encouraging timeline projecting forward into major life eras and milestones all the way up to the horizon of 2071.
+
+* 📷 **Polaroid Style Photo Frames** 
+  Specially coded media placeholders tailored to cleanly hold personal family photos directly inside the app layout.
+
+* 💾 **One-Click Print-to-PDF** 
+  A built-in print override engine that instantly reformats the digital cards into an A4 portrait layout, ready to print as a physical book.
+
+---
+
+### 🛠️ Technology Stack
+
+* 🌐 **Frontend Layout:** Pure HTML5 structure paired with custom responsive CSS3 mechanics.
+* ⚡ **Application Logic:** Lightweight, vanilla JavaScript for instant slide navigation (completely independent of external frame engines).
+* ✍️ **Typography Architecture:** Hand-curated Google Font pairs featuring **Playfair Display** (editorial, literary serif) and **Inter** (clean, readable sans-serif).
+
