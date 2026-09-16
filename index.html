@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Histoire de ton Jour — Harry</title>
+    <!-- Google Fonts Artistiques -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Design Global Immersif - Coucher de Soleil poétique */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #4c1d95 50%, #831843 75%, #f59e0b 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .deck-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 520px; /* Taille idéale type application mobile / livre d'art */
+        }
+
+        /* Cartes Diapositive - Fluides sur Mobile, Format Livre sur PC */
+        .slide {
+            width: 100%;
+            min-height: 700px;
+            box-sizing: border-box;
+            position: relative;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            overflow: hidden;
+            padding: 40px 30px;
+            display: none; /* Géré par le script */
+            flex-direction: column;
+            justify-content: center;
+            border-radius: 32px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Style Écriture Poétique & Littéraire */
+        .slide-header {
+            border-bottom: 1px solid rgba(76, 29, 149, 0.15);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        .slide-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 24pt;
+            color: #1e1b4b;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .slide-header p {
+            font-size: 11pt;
+            color: #831843;
+            font-weight: 500;
+            margin: 6px 0 0 0;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .slide-body {
+            margin-top: auto;
+            margin-bottom: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .content-text {
+            font-size: 12pt;
+            line-height: 1.7;
+            color: #334155;
+            margin: 0;
+            text-align: justify;
+        }
+        .content-text strong {
+            color: #1e1b4b;
+            font-family: 'Playfair Display', serif;
+            font-size: 12.5pt;
+        }
+
+        /* Encadrés Poétiques */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff1f2 0%, rgba(255, 255, 255, 0.5) 100%);
+            border-left: 4px solid #db2777;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 8px 0;
+            font-style: italic;
+            box-shadow: 0 4px 15px rgba(219, 39, 119, 0.03);
+        }
+
+        /* Conteneurs Photos Art & Polaroid */
+        .photo-placeholder {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 20px;
+            padding: 16px;
+            text-align: center;
+            color: #64748b;
+            font-size: 10pt;
+            font-style: italic;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 180px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+        .photo-placeholder span {
+            font-size: 18px;
+        }
+
+        /* Effet Feux d'artifice épurés en arrière-plan */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .fw-1 { left: 15%; top: 20%; animation: burst 4s infinite 0.5s; box-shadow: 0 0 20px 4px #f43f5e, -30px -40px 0 #f59e0b, 40px -20px 0 #a855f7; }
+        .fw-2 { right: 15%; top: 40%; animation: burst 4s infinite 2.5s; box-shadow: 0 0 20px 4px #38bdf8, -20px 40px 0 #ec4899, 30px 30px 0 #f59e0b; }
+        @keyframes burst {
+            0% { transform: scale(0.4); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* Grilles & Graphiques Statistiques */
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 14px 8px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 18pt; font-weight: 700; color: #1e1b4b; }
+        .stat-label { font-size: 8.5pt; color: #64748b; font-weight: 500; margin-top: 4px; }
+
+        /* Timeline Capsule Temporelle */
+        .timeline-container { display: flex; flex-direction: column; gap: 12px; margin: 12px 0; }
+        .timeline-item { 
+            background: #ffffff; 
+            padding: 14px 18px; 
+            border-radius: 18px;
+            font-size: 11pt;
+            border-left: 3px solid #db2777;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            line-height: 1.5;
+        }
+        .border-purple { border-left-color: #4c1d95; }
+        .border-teal { border-left-color: #0d9488; }
+        .border-yellow { border-left-color: #d97706; }
+        .border-muted { border-left-color: #64748b; }
+
+        /* Barre de navigation Mobile-First */
+        .control-panel {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-sizing: border-box;
+        }
+        .btn-group { display: flex; gap: 8px; }
+        .btn {
+            background-color: #1e1b4b;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 10.5pt;
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn:hover { background-color: #3b0764; }
+        .btn:active { transform: scale(0.95); }
+        .btn:disabled { opacity: 0.2; cursor: not-allowed; transform: none; }
+        .btn-pdf { background: linear-gradient(135deg, #0d9488, #115e59); }
+
+        .counter-text { font-size: 13px; font-weight: 600; color: #475569; }
+
+        /* Style Impression A4 Strict */
+        @media print {
+            body { background: none !important; padding: 0 !important; margin: 0 !important; }
+            .no-print { display: none !important; }
+            .deck-container { max-width: 100% !important; }
+            .slide {
+                display: flex !important;
+                width: 8.5in !important;
+                height: 11.0in !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background: #ffffff !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                padding: 0.8in !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="deck-container">
+ <!-- ==========================================
+            DIAPOSITIVE 1 : Couverture Littéraire
+        ========================================== -->
+        <div id="slide-1" class="slide active">
+            <div class="firework fw-1"></div>
+            <div class="firework fw-2"></div>
+            
+            <div style="width: 100%; height: 100%; border: 1px solid rgba(76, 29, 149, 0.15); background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,247,237,0.4) 100%); border-radius: 24px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;">
+                <div style="color: #831843; font-size: 9pt; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;">Édition Spéciale Anniversaire</div>
+                
+                <div style="margin: auto 0;">
+                    <h1 style="font-family: 'Playfair Display', serif; font-weight: 800; font-size: 28pt; color: #1e1b4b; margin: 0 0 10px 0; line-height: 1.15; letter-spacing: -0.02em;">L'Histoire de ton Jour</h1>
+                    <h2 style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 36pt; color: #4c1d95; margin: 0 0 12px 0; letter-spacing: -0.01em;">HARRY</h2>
+                    <h3 style="font-size: 11pt; color: #db2777; font-weight: 600; margin: 0 0 30px 0; letter-spacing: 0.05em;">17 SEPTEMBRE 2004 &bull; MONTRÉAL, CANADA</h3>
+                    
+                    <p class="content-text" style="text-align: center; font-style: italic; font-size: 12.5pt; color: #334155;">
+                        Cher Harry,<br><br>
+                        Bon anniversaire ! Si nous remontons le temps jusqu’au jour où ton histoire a commencé — un doux vendredi 17 septembre 2004 —, les cieux et la terre s’étaient accordés pour t'accueillir chaleureusement à Montréal.
+                    </p>
+                </div>
+
+                <div class="photo-placeholder" style="width: 100%;">
+                    <span>📷</span> <strong>EMPLACEMENT PHOTO</strong> Premier souvenir à Montréal
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+            DIAPOSITIVE 2 : Étoiles
+        ========================================== -->
+        <div id="slide-2" class="slide">
+            <div class="slide-header">
+                <h2>🔮 Ciel & Étoiles</h2>
+                <p>Ton Empreinte Astrologique</p>
+            </div>
+            <div class="slide-body">
+                <p class="content-text">
+                    En venant au monde sous le signe de la <strong>Vierge</strong>, tu portes en toi cette sagesse pratique, cette attention portée aux détails et cette volonté constante de rendre le monde plus beau et mieux ordonné. Ton monde émotionnel est guidé par une <strong>Lune en Balance</strong> qui cherche en tout temps l'équité, l'harmonie et l'apaisement des tensions.
+                </p>
+                <div class="highlight-box">
+                    Comme tu as poussé ton premier cri un vendredi, la brillante planète <strong>Vénus</strong> veillait sur ton berceau pour t'insuffler un charme naturel, une grande loyauté en amitié et une vraie sensibilité artistique.
+                </div>
+                <p class="content-text">
+                    À cela s'ajoute le passage de <strong>Saturne en Cancer</strong> au moment exact de ta naissance, instillant un amour profond de ta famille et le besoin de bâtir un foyer solide pour tes proches.
+                </p>
+            </div>
+        </div>
+
+        <!-- ==========================================
+            DIAPOSITIVE 3 : Racines
+        ========================================== -->
+        <div id="slide-3" class="slide">
+            <div class="slide-header">
+                <h2>📜 Racines & Traditions</h2>
+                <p>Culture mondiale du 17 Septembre</p>
+            </div>
+            <div class="slide-body">
+                <p class="content-text">
+                    Le jour de ta naissance résonne avec une incroyable richesse culturelle à travers le globe. Dans la tradition chrétienne, on y célèbre la <strong>Saint-Robert-Bellarmin</strong> mais aussi la fête orthodoxe des saintes <strong>Sophie, Foi, Espérance et Charité</strong>, symboles universels de sagesse et de force d'âme.
+                </p>
+                <p class="content-text">
+                    Si l'on consulte le calendrier hégirien musulman, tu es venu au monde le <strong>2 Sha'ban 1425 AH</strong>, un mois traditionnellement consacré à la préparation spirituelle et aux actes de bienveillance.
+                </p>
+                <p class="content-text">
+                    De plus, pour les peuples autochtones d'Amérique du Nord, la mi-septembre correspond à la majestueuse <strong>Lune des Moissons</strong>, une période de célébration, de gratitude et de rassemblement de la communauté autour des récoltes généreuses.
+                </p>
+            </div>
+            <div class="photo-placeholder">
+                <span>📷</span> <strong>EMPLACEMENT PHOTO</strong> Racines et Traditions familiales
+            </div>
+        </div>
+
+        <!-- ==========================================
+            DIAPOSITIVE 4 : Météo & Pop Culture
+        ========================================== -->
+        <div id="slide-4" class="slide">
+            <div class="slide-header">
+                <h2>🌤️ Météo & Ambiance</h2>
+                <p>Le Montréal de l'année 2004</p>
+            </div>
+            <div class="slide-body">
+                <p class="content-text">
+                    Le vendredi 17 septembre 2004, Montréal t'a accueilli sous une météo idéale d'arrière-saison, avec un mercure avoisinant les <strong>19°C</strong> sous un ciel voilé d'une brise légère. L'année dernière, au même moment, la ville baignait dans une atmosphère tout aussi douce à 18°C. Pour cette nouvelle bougie, les prévisions s'annoncent tout aussi belles, offrant une journée douce et ensoleillée autour de <strong>19°C</strong>, idéale pour se réunir.
+                </p>
+                <div style="border-top: 1px solid rgba(0,0,0,0.06); padding-top: 16px; margin-top: 4px;">
+                    <p class="content-text">
+                        En arpentant les rues, on entendait résonner dans les radios québécoises comme CKOI et Énergie les hits incontournables <em>Goodies</em> de Ciara et <em>She Will Be Loved</em> de Maroon 5. C'était l'époque dorée des iPods à molette et de Messenger. Les cinémas affichaient alors le film <em>Sky Captain and the World of Tomorrow</em>, alors que la rentrée battait son plein sur les campus de McGill et de l'UQAM.
+                    </p>
+                </div>
+            </div>
+            <div class="photo-placeholder">
+                <span>📷</span> <strong>EMPLACEMENT PHOTO</strong> Ambiance de l'époque rétro
+            </div>
+        </div>
+
+      <!-- ==========================================
+            DIAPOSITIVE 5 : Statistiques
+        ========================================== -->
+        <div id="slide-5" class="slide">
+            <div class="slide-header">
+                <h2>⏳ Le Compteur de Vie</h2>
+                <p>Tes Caps Secrètes</p>
+            </div>
+            <div class="slide-body">
+                <p class="content-text">
+                    En ce 17 septembre 2026, tu franchis le cap de tes <strong>22 ans</strong>, ce qui totalise avec une précision fascinante :
+                </p>
+                
+                <div class="grid-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" style="color: #4c1d95;">8 035</div>
+                        <div class="stat-label">Jours vécus</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" style="color: #db2777;">192k+</div>
+                        <div class="stat-label">Heures</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" style="color: #0d9488;">694M</div>
+                        <div class="stat-label">Battements</div>
+                    </div>
+                </div>
+
+                <p class="content-text">
+                    Garde bien ton agenda à portée de main : ton tout prochain cap secret, le <strong>8 500ᵉ jour</strong> de ta vie, aura lieu le 26 décembre 2027. Et pour la petite anecdote magique, ton <strong>9 500ᵉ jour</strong> tombera le 21 septembre 2030, soit à peine quatre jours après avoir célébré tes 26 ans !
+                </p>
+            </div>
+        </div>
+
+        <!-- ==========================================
+            DIAPOSITIVE 6 : Décennies
+        ========================================== -->
+        <div id="slide-6" class="slide">
+            <div class="slide-header">
+                <h2>🚀 Capsule Temporelle</h2>
+                <p>L'Aventure des Décennies</p>
+            </div>
+            <div class="slide-body">
+                <div class="timeline-container">
+                    <div class="timeline-item border-purple">
+                        <strong>2034 (30 ans) :</strong> Plein pic de ta forme physique et de ta maturité cognitive, l'âge parfait de l'affirmation personnelle.
+                    </div>
+                    <div class="timeline-item" style="border-left-color: #db2777;">
+                        <strong>2044 (40 ans) :</strong> Décennie de l'équilibre et de l'expérience maîtrisée, idéale pour réaliser les choix de vie les plus audacieux.
+                    </div>
+                    <div class="timeline-item border-teal">
+                        <strong>2054 (50 ans) :</strong> La priorité glissera naturellement vers la transmission des savoirs, la santé globale et le plaisir d'être entouré.
+                    </div>
+                    <div class="timeline-item border-yellow">
+                        <strong>2064 (60 ans) :</strong> Le temps de savourer le fruit de tes accomplissements et d'anticiper de nouveaux projets de vie.
+                    </div>
+                    <div class="timeline-item border-muted">
+                        <strong>Horizon 2071 (67 ans) :</strong> Une retraite bien méritée pour explorer de nouvelles passions et admirer le chemin parcouru !
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+            DIAPOSITIVE 7 : Vœux Finaux
+        ========================================= -->
+        <div id="slide-7" class="slide">
+            <div style="width: 100%; height: 100%; border: 1px dashed rgba(76,29,149,0.3); background: linear-gradient(180deg, #ffffff 0%, #fdf2f8 100%); border-radius: 24px; padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
+                
+                <div style="text-align: center; margin-top: auto; margin-bottom: auto;">
+                    <p style="font-family: 'Playfair Display', serif; font-size: 16pt; font-style: italic; color: #1e1b4b; line-height: 1.8; margin-bottom: 40px; font-weight: 500; text-align: center;">
+                        "Que cette nouvelle année te rapproche de tes rêves, t'aligne avec tes étoiles et t'enracine dans une joie profonde."
+                    </p>
+                    
+                    <div style="text-align: right; padding-right: 10px;">
+                        <p style="font-size: 13pt; color: #64748b; margin: 0; font-style: italic;">Avec toute ma tendresse,</p>
+                        <p style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22pt; color: #db2777; margin: 4px 0 0 0;">Ta plume amie</p>
+                    </div>
+                </div>
+
+                <div class="photo-placeholder" style="width: 100%;">
+                    <span>📷</span> <strong>EMPLACEMENT PHOTO</strong> Un souhait pour l'avenir
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre de navigation mobile-friendly -->
+        <div class="control-panel no-print">
+            <div class="btn-group">
+                <button id="prevBtn" onclick="changeSlide(-1)" class="btn">←</button>
+                <button id="nextBtn" onclick="changeSlide(1)" class="btn">→</button>
+            </div>
+            <span id="slideCounter" class="counter-text">Slide 1 / 7</span>
+            <button onclick="window.print()" class="btn btn-pdf">💾 PDF</button>
+        </div>
+
+    </div>
+
+    <!-- Script JavaScript Interactif Intégré -->
+    <script>
+        let currentSlideIndex = 1;
+        const totalSlides = 7;
+
+        function updateUI() {
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (slide) {
+                    if (i === currentSlideIndex) {
+                        slide.style.display = 'flex';
+                    } else {
+                        slide.style.display = 'none';
+                    }
+                }
+            }
+            document.getElementById('prevBtn').disabled = (currentSlideIndex === 1);
+            document.getElementById('nextBtn').disabled = (currentSlideIndex === totalSlides);
+            document.getElementById('slideCounter').innerText = `Page ${currentSlideIndex} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex < 1) currentSlideIndex = 1;
+            if (currentSlideIndex > totalSlides) currentSlideIndex = totalSlides;
+            updateUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonte automatiquement en haut de la carte sur mobile
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
+      
