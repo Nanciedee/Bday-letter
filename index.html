@@ -264,6 +264,21 @@
             color:rgba(253,246,236,.5); letter-spacing:.06em;
         }
 
+         /* ══ LECTEUR MUSIQUE FLOTTANT ══ */
+        .music-player {
+            position: fixed;
+            bottom: 28px; left: 28px;
+            z-index: 100;
+            ...
+        }
+        .music-btn { ... }
+        .music-bars span { animation: bar-bounce ... }
+        @keyframes bar-bounce { ... }
+
+        @media print {
+            .music-player { display: none !important; }
+        }
+
         /* ══════════════════════════════════════════
            IMPRESSION PDF
         ══════════════════════════════════════════ */
@@ -304,9 +319,26 @@
             .stat-label         { color:#666 !important; }
             .cover-portrait img { border-color:#8b1a4a !important; }
         }
-    </style>
+</style>
 </head>
 <body>
+
+<!-- ════ AUDIO ════ -->                          ← AJOUTÉ
+<audio id="bgMusic" loop preload="auto">
+    <source src="music.mp4" type="audio/mpeg">
+</audio>
+
+<!-- ════ LECTEUR FLOTTANT ════ -->              ← AJOUTÉ
+<div class="music-player" id="musicPlayer">
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶</button>
+    <div class="music-info">
+        <span class="music-title">🎵 Musique d'anniversaire</span>
+        <span class="music-status" id="musicStatus">Cliquez pour écouter</span>
+    </div>
+    <div class="music-bars" id="musicBars">
+        <span></span><span></span><span></span><span></span><span></span>
+    </div>
+</div>
 
 <div class="dots-layer" aria-hidden="true">
     <div class="dot"></div><div class="dot"></div><div class="dot"></div>
@@ -497,9 +529,30 @@
         }, 150);
     }
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowLeft')  changeSlide(-1);
-        if (e.key === 'ArrowRight') changeSlide(1);
+    document.addEventListener('keydown', function (e) { ... });
+
+    /* ─── LECTEUR MUSIQUE ─── */              ← AJOUTÉ
+    const audio   = document.getElementById('bgMusic');
+    const btn     = document.getElementById('musicBtn');
+    const status  = document.getElementById('musicStatus');
+    const bars    = document.getElementById('musicBars');
+    let   isPlaying = false;
+
+    function setPlaying(play) {
+        isPlaying = play;
+        btn.textContent    = play ? '⏸' : '▶';
+        status.textContent = play ? 'En cours...' : 'En pause';
+        bars.classList.toggle('playing', play);
+    }
+
+    function toggleMusic() {
+        if (isPlaying) { audio.pause(); setPlaying(false); }
+        else { audio.play().then(() => setPlaying(true)).catch(...); }
+    }
+
+    window.addEventListener('load', function () {
+        audio.volume = 0.45;
+        audio.play().then(() => setPlaying(true)).catch(() => {});
     });
 
     updateUI();
