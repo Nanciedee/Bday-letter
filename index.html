@@ -63,22 +63,21 @@
         @media (min-width:860px)  { .deck-container { max-width:840px; } }
         @media (min-width:1120px) { .deck-container { max-width:1000px; } }
 
-        /* ══ CARTE VERRE SOMBRE ══
-           padding:0 ici → les photos peuvent aller bord à bord
-           overflow:hidden → la photo est clippée par border-radius
-        ══════════════════════════ */
+        /* ══════════════════════════════════════════
+           CARTE DE BASE (verre sombre)
+        ══════════════════════════════════════════ */
         .slide {
             width:100%; min-height:640px;
             position:relative;
             background:rgba(6,2,20,.52);
             backdrop-filter:blur(26px); -webkit-backdrop-filter:blur(26px);
-            overflow:hidden;          /* clip naturel des photos */
-            padding:0;                /* PAS de padding sur le slide */
+            overflow:hidden;
+            padding:0;
             display:none; flex-direction:column;
             border-radius:30px;
-            box-shadow:0 1px 0 rgba(255,255,255,.12) inset,
-                       0 36px 72px rgba(0,0,0,.65),
-                       0 0 0 1px rgba(255,255,255,.07);
+            box-shadow: 0 1px 0 rgba(255,255,255,.12) inset,
+                        0 36px 72px rgba(0,0,0,.65),
+                        0 0 0 1px rgba(255,255,255,.07);
             color:#fdf6ec;
         }
         @media (min-width:860px) { .slide { min-height:680px; } }
@@ -88,13 +87,40 @@
             to   { opacity:1; transform:translateY(0) scale(1); }
         }
 
-        /* ══ CONTENU INTERNE (a le padding) ══ */
+        /* ══════════════════════════════════════════
+           SLIDE AVEC PHOTO EN BACKGROUND
+           La photo est mise via style="background-image:url(...)"
+           Un voile ::before assure la lisibilité du texte
+        ══════════════════════════════════════════ */
+        .slide.bg-photo {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* On retire le verre sombre — la photo prend toute la place */
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        /* Voile dégradé sombre par-dessus la photo */
+        .slide.bg-photo::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(160deg,
+                rgba(6,2,20,.78) 0%,
+                rgba(6,2,20,.60) 50%,
+                rgba(6,2,20,.72) 100%);
+            z-index: 0;
+            border-radius: 30px;
+        }
+        /* Le contenu passe au-dessus du voile */
+        .slide.bg-photo .slide-content { position:relative; z-index:1; }
+
+        /* ══ CONTENU INTERNE ══ */
         .slide-content {
-            padding:36px 36px 24px;
+            padding:36px 36px 36px;
             flex-grow:1;
             display:flex; flex-direction:column;
         }
-        @media (min-width:860px) { .slide-content { padding:52px 58px 32px; } }
+        @media (min-width:860px) { .slide-content { padding:52px 58px 44px; } }
 
         /* ══ EN-TÊTE ══ */
         .slide-header {
@@ -108,7 +134,7 @@
         }
         @media (min-width:860px) { .slide-header h2 { font-size:30pt; } }
         .slide-header p {
-            font-size:10pt; color:rgba(240,180,41,.75);
+            font-size:10pt; color:rgba(240,180,41,.80);
             font-style:italic; margin-top:5px;
         }
 
@@ -119,26 +145,65 @@
         }
 
         /* ══ TEXTE ══ */
-        .content-text { font-size:11.5pt; line-height:1.9; color:rgba(253,246,236,.88); }
+        .content-text { font-size:11.5pt; line-height:1.9; color:rgba(253,246,236,.90); }
         @media (min-width:860px) { .content-text { font-size:12.5pt; } }
         .content-text p { margin:0 0 15px; }
         .content-text p:last-child { margin-bottom:0; }
         .content-text strong { color:#f0b429; font-weight:600; }
 
-        /* ══ PHOTO — enfant direct du .slide → pleine largeur naturelle ══
-           Le overflow:hidden + border-radius du .slide clippent proprement
-        ════════════════════════════════════════════════════════════════════ */
-        .photo-wrapper {
-            width:100%;       /* pleine largeur, PAS de marge négative */
-            height:300px;
-            flex-shrink:0;
-            overflow:hidden;
+        /* ══════════════════════════════════════════
+           SLIDE 1 — COUVERTURE
+           Photo bébé en petit portrait (pas en fond)
+        ══════════════════════════════════════════ */
+        .cover-label {
+            font-style:italic; font-size:9.5pt;
+            color:rgba(240,180,41,.65); letter-spacing:.12em; margin-bottom:18px;
         }
-        @media (min-width:860px) { .photo-wrapper { height:380px; } }
-        .photo-wrapper img {
-            width:100%; height:100%;
+        .cover-surtitle {
+            font-family:'Cormorant Garamond',serif; font-weight:400;
+            font-size:11pt; color:rgba(253,246,236,.6);
+            letter-spacing:.28em; margin-bottom:4px;
+        }
+        .cover-name {
+            font-family:'Cormorant Garamond',serif; font-weight:700;
+            font-size:70pt; color:#f0b429;
+            line-height:.9; letter-spacing:-.02em; margin-bottom:8px;
+        }
+        @media (min-width:860px) { .cover-name { font-size:100pt; } }
+        .cover-date {
+            font-style:italic; font-size:10.5pt;
+            color:rgba(253,246,236,.6); margin-bottom:20px;
+        }
+
+        /* Rangée : texte intro à gauche, petit portrait à droite */
+        .cover-row {
+            display:flex; gap:24px; align-items:flex-start; flex-grow:1;
+        }
+        .cover-intro {
+            font-size:11pt; line-height:1.9;
+            color:rgba(253,246,236,.82); font-style:italic;
+            flex:1;
+        }
+        @media (min-width:860px) { .cover-intro { font-size:12pt; } }
+        .cover-intro p { margin:0 0 12px; }
+
+        /* Petit portrait bébé */
+        .cover-portrait {
+            width:130px; flex-shrink:0;
+            display:flex; flex-direction:column; align-items:center; gap:8px;
+        }
+        @media (min-width:860px) { .cover-portrait { width:170px; } }
+        .cover-portrait img {
+            width:100%;
+            aspect-ratio:3/4;
             object-fit:cover; object-position:center top;
-            display:block;
+            border-radius:16px;
+            border:2px solid rgba(240,180,41,.4);
+            box-shadow:0 8px 24px rgba(0,0,0,.5);
+        }
+        .cover-portrait span {
+            font-size:8pt; font-style:italic;
+            color:rgba(253,246,236,.45); text-align:center;
         }
 
         /* ══ STATS ══ */
@@ -158,11 +223,11 @@
         /* ══ TIMELINE ══ */
         .timeline-container { display:flex; flex-direction:column; gap:10px; }
         .timeline-item {
-            background:rgba(255,255,255,.055);
-            border:1px solid rgba(255,255,255,.08);
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.10);
             padding:13px 16px; border-radius:14px;
             font-size:10.5pt; border-left:3px solid #f0b429;
-            line-height:1.7; color:rgba(253,246,236,.85);
+            line-height:1.7; color:rgba(253,246,236,.88);
         }
         @media (min-width:860px) { .timeline-item { font-size:11.5pt; padding:14px 20px; } }
         .timeline-item strong { color:#f0b429; }
@@ -170,33 +235,6 @@
         .b-teal   { border-left-color:#2dd4bf; }
         .b-rose   { border-left-color:#fb7185; }
         .b-muted  { border-left-color:rgba(255,255,255,.28); }
-
-        /* ══ COUVERTURE (slide 1) ══ */
-        .cover-label {
-            font-style:italic; font-size:9.5pt;
-            color:rgba(240,180,41,.65); letter-spacing:.12em; margin-bottom:22px;
-        }
-        .cover-surtitle {
-            font-family:'Cormorant Garamond',serif; font-weight:400;
-            font-size:11pt; color:rgba(253,246,236,.6);
-            letter-spacing:.28em; margin-bottom:5px;
-        }
-        .cover-name {
-            font-family:'Cormorant Garamond',serif; font-weight:700;
-            font-size:70pt; color:#f0b429;
-            line-height:.9; letter-spacing:-.02em; margin-bottom:10px;
-        }
-        @media (min-width:860px) { .cover-name { font-size:100pt; } }
-        .cover-date {
-            font-style:italic; font-size:10.5pt;
-            color:rgba(253,246,236,.6); margin-bottom:26px;
-        }
-        .cover-intro {
-            font-size:11.5pt; line-height:1.9;
-            color:rgba(253,246,236,.82); font-style:italic; flex-grow:1;
-        }
-        @media (min-width:860px) { .cover-intro { font-size:12.5pt; } }
-        .cover-intro p { margin:0 0 12px; }
 
         /* ══ NAVIGATION ══ */
         .control-panel {
@@ -218,10 +256,7 @@
         }
         .btn:hover:not(:disabled) { background:rgba(240,180,41,.26); }
         .btn:disabled { opacity:.22; cursor:not-allowed; }
-        .btn-pdf {
-            background:rgba(45,212,191,.1); color:#2dd4bf;
-            border-color:rgba(45,212,191,.28);
-        }
+        .btn-pdf { background:rgba(45,212,191,.1); color:#2dd4bf; border-color:rgba(45,212,191,.28); }
         .btn-pdf:hover:not(:disabled) { background:rgba(45,212,191,.24) !important; }
         .counter-text {
             font-family:'Cormorant Garamond',serif;
@@ -229,59 +264,45 @@
             color:rgba(253,246,236,.5); letter-spacing:.06em;
         }
 
-        /* ══════════════════════════════════════════════════
-           IMPRESSION / PDF
-           Le JS affiche TOUTES les slides avant window.print()
-           donc pas besoin de !important sur display.
-           On gère ici seulement les couleurs et la mise en page.
-        ══════════════════════════════════════════════════ */
+        /* ══════════════════════════════════════════
+           IMPRESSION PDF
+        ══════════════════════════════════════════ */
         @media print {
             @page { size:A4; margin:1.3cm 1.6cm; }
-
-            body {
-                background:white !important;
-                padding:0 !important;
-                display:block !important;
-            }
-            body::before   { display:none !important; }
-            .dots-layer    { display:none !important; }
-            .control-panel { display:none !important; }
+            body { background:white !important; padding:0 !important; display:block !important; }
+            body::before, .dots-layer, .control-panel { display:none !important; }
             .deck-container { max-width:100% !important; display:block !important; }
 
             .slide {
-                /* Pas besoin de display:flex ici — le JS s'en charge */
                 background:white !important;
                 backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
                 color:#1c1c2e !important;
                 border-radius:0 !important; box-shadow:none !important;
                 min-height:0 !important; padding:0 !important;
-                margin-bottom:0 !important;
                 page-break-after:always !important; break-after:page !important;
-                border:none !important;
             }
-            .slide:last-of-type { page-break-after:auto !important; break-after:auto !important; }
+            /* Pour les slides avec photo en fond : imprimer la photo en fond */
+            .slide.bg-photo {
+                -webkit-print-color-adjust:exact !important;
+                print-color-adjust:exact !important;
+            }
+            .slide.bg-photo::before { display:none !important; }
 
-            /* Contenu interne */
-            .slide-content { padding:28px 36px 20px !important; }
-
-            /* Couleurs texte */
-            .slide-header h2 { color:#1c1c2e !important; font-size:22pt !important; }
-            .slide-header     { border-bottom-color:#8b1a4a !important; }
-            .slide-header p   { color:#8b1a4a !important; }
-            .content-text          { color:#2d2d2d !important; font-size:11pt !important; }
-            .content-text strong   { color:#7c1a2e !important; }
-            .cover-name            { color:#8b1a4a !important; font-size:64pt !important; }
-            .cover-surtitle, .cover-label, .cover-date { color:#555 !important; }
-            .cover-intro           { color:#2d2d2d !important; }
-            .timeline-item         { color:#2d2d2d !important; background:#f6f3ee !important;
-                                     border-color:#ddd !important; }
-            .timeline-item strong  { color:#7c1a2e !important; }
-            .stat-card             { background:#f6f3ee !important; border-color:#ddd !important; }
-            .stat-number           { color:#7c1a2e !important; }
-            .stat-label            { color:#666 !important; }
-
-            /* Photos en impression — restent dans le flux, taille réduite */
-            .photo-wrapper { height:220px !important; }
+            .slide-content { padding:28px 36px 24px !important; }
+            .slide-header h2   { color:#1c1c2e !important; font-size:22pt !important; }
+            .slide-header       { border-bottom-color:#8b1a4a !important; }
+            .slide-header p     { color:#8b1a4a !important; }
+            .content-text       { color:#2d2d2d !important; font-size:11pt !important; }
+            .content-text strong { color:#7c1a2e !important; }
+            .cover-name         { color:#8b1a4a !important; font-size:60pt !important; }
+            .cover-surtitle,.cover-label,.cover-date { color:#555 !important; }
+            .cover-intro        { color:#2d2d2d !important; }
+            .timeline-item      { color:#2d2d2d !important; background:#f6f3ee !important; border-color:#ddd !important; }
+            .timeline-item strong { color:#7c1a2e !important; }
+            .stat-card          { background:#f6f3ee !important; border-color:#ddd !important; }
+            .stat-number        { color:#7c1a2e !important; }
+            .stat-label         { color:#666 !important; }
+            .cover-portrait img { border-color:#8b1a4a !important; }
         }
     </style>
 </head>
@@ -297,8 +318,7 @@
 <div class="deck-container">
 
     <!-- ════════════ SLIDE 1 — Couverture ════════════
-         Structure : slide > slide-content + photo-wrapper
-         photo-wrapper est enfant direct → pleine largeur naturelle
+         Photo bébé en petit portrait à droite du texte
     ═══════════════════════════════════════════════════ -->
     <div id="slide-1" class="slide active">
         <div class="slide-content">
@@ -306,17 +326,21 @@
             <p class="cover-surtitle">L'HISTOIRE DE TON JOUR</p>
             <h1 class="cover-name">HARRY</h1>
             <p class="cover-date">17 Septembre 2004 · Montréal, Canada</p>
-            <div class="cover-intro">
-                <p>Cher Harry,</p>
-                <p>Bon anniversaire ! Si on remonte le temps jusqu'au jour où ton histoire a commencé, un doux vendredi 17 septembre 2004, on dirait que le ciel et la terre s'étaient donné le mot pour t'accueillir à bras ouverts, ici à Montréal.</p>
+
+            <div class="cover-row">
+                <div class="cover-intro">
+                    <p>Cher Harry,</p>
+                    <p>Bon anniversaire ! Si on remonte le temps jusqu'au jour où ton histoire a commencé, un doux vendredi 17 septembre 2004, on dirait que le ciel et la terre s'étaient donné le mot pour t'accueillir à bras ouverts, ici à Montréal.</p>
+                </div>
+                <div class="cover-portrait">
+                    <img src="HarryBébé.jpg" alt="Harry Bébé">
+                    <span>17 sept. 2004</span>
+                </div>
             </div>
-        </div>
-        <div class="photo-wrapper">
-            <img src="HarryBébé.jpg" alt="Harry Bébé">
         </div>
     </div>
 
-    <!-- ════════════ SLIDE 2 — Astrologie ════════════ -->
+    <!-- ════════════ SLIDE 2 — Astrologie (pas de photo) ════════════ -->
     <div id="slide-2" class="slide">
         <div class="slide-content">
             <div class="slide-header">
@@ -325,7 +349,7 @@
             </div>
             <div class="slide-body">
                 <div class="content-text">
-                    <p>Tu es venu au monde sous le signe de la <strong>Vierge</strong> — cette sagesse pratique, ce souci du détail et cette envie tranquille de rendre les choses plus belles, plus justes, mieux ordonnées. Ta <strong>Lune en Balance</strong> guide ton cœur vers l'harmonie, le besoin d'apaiser les tensions autour de toi.</p>
+                    <p>Tu es venu au monde sous le signe de la <strong>Vierge</strong> — cette sagesse pratique, ce souci du détail et cette envie tranquille de rendre les choses plus belles, plus justes, mieux ordonnées. Ta <strong>Lune en Balance</strong> guide ton cœur vers l'harmonie et le besoin d'apaiser les tensions autour de toi.</p>
                     <p>Comme tu as poussé ton premier cri un vendredi, la brillante planète <strong>Vénus</strong> veillait sur ton berceau : elle t'a offert ce charme naturel, cette loyauté en amitié et cette sensibilité artistique qui te correspondent si bien.</p>
                     <p>Et le passage de <strong>Saturne en Cancer</strong>, juste au moment de ta naissance, a planté en toi un amour profond pour ta famille — ce besoin de bâtir un foyer solide, un vrai refuge pour les tiens.</p>
                 </div>
@@ -333,8 +357,8 @@
         </div>
     </div>
 
-    <!-- ════════════ SLIDE 3 — Racines ════════════ -->
-    <div id="slide-3" class="slide">
+    <!-- ════════════ SLIDE 3 — Racines (photo en fond) ════════════ -->
+    <div id="slide-3" class="slide bg-photo" style="background-image:url('RacinesTraditions2.jpg')">
         <div class="slide-content">
             <div class="slide-header">
                 <h2>Racines & Traditions</h2>
@@ -348,13 +372,10 @@
                 </div>
             </div>
         </div>
-        <div class="photo-wrapper">
-            <img src="RacinesTraditions2.jpg" alt="Racines et Traditions">
-        </div>
     </div>
 
-    <!-- ════════════ SLIDE 4 — Météo & Culture ════════════ -->
-    <div id="slide-4" class="slide">
+    <!-- ════════════ SLIDE 4 — Météo & Culture (photo en fond) ════════════ -->
+    <div id="slide-4" class="slide bg-photo" style="background-image:url('PopCulture3.jpg')">
         <div class="slide-content">
             <div class="slide-header">
                 <h2>Météo & Mémoire Vivante</h2>
@@ -367,12 +388,9 @@
                 </div>
             </div>
         </div>
-        <div class="photo-wrapper">
-            <img src="PopCulture3.jpg" alt="Montréal Pop Culture">
-        </div>
     </div>
 
-    <!-- ════════════ SLIDE 5 — Compteur de Vie ════════════ -->
+    <!-- ════════════ SLIDE 5 — Compteur de Vie (pas de photo) ════════════ -->
     <div id="slide-5" class="slide">
         <div class="slide-content">
             <div class="slide-header">
@@ -404,7 +422,7 @@
         </div>
     </div>
 
-    <!-- ════════════ SLIDE 6 — Capsule Temporelle ════════════ -->
+    <!-- ════════════ SLIDE 6 — Capsule Temporelle (pas de photo) ════════════ -->
     <div id="slide-6" class="slide">
         <div class="slide-content">
             <div class="slide-header">
@@ -423,19 +441,16 @@
         </div>
     </div>
 
-    <!-- ════════════ SLIDE 7 — Vœux Finaux ════════════ -->
-    <div id="slide-7" class="slide">
-        <div class="slide-content" style="justify-content:center; gap:0;">
-            <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22pt;color:rgba(253,246,236,.92);line-height:1.65;text-align:center;margin-bottom:30px;">
+    <!-- ════════════ SLIDE 7 — Vœux (photo en fond) ════════════ -->
+    <div id="slide-7" class="slide bg-photo" style="background-image:url('VœuxAvenir4.jpg')">
+        <div class="slide-content" style="justify-content:center;">
+            <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22pt;color:#fdf6ec;line-height:1.65;text-align:center;margin-bottom:32px;text-shadow:0 2px 12px rgba(0,0,0,.6);">
                 « Que cette nouvelle année te rapproche de tes rêves, t'aligne avec tes étoiles et t'enracine dans une joie profonde. »
             </p>
             <div style="text-align:right;">
-                <p style="font-size:10.5pt;color:rgba(253,246,236,.55);font-style:italic;margin-bottom:5px;">Avec toute ma tendresse,</p>
-                <p style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:28pt;color:#f0b429;">Ta Maman qui t'aime</p>
+                <p style="font-size:10.5pt;color:rgba(253,246,236,.65);font-style:italic;margin-bottom:5px;text-shadow:0 1px 6px rgba(0,0,0,.5);">Avec toute ma tendresse,</p>
+                <p style="font-family:'Cormorant Garamond',serif;font-weight:700;font-size:28pt;color:#f0b429;text-shadow:0 2px 16px rgba(0,0,0,.6);">Ta Maman qui t'aime</p>
             </div>
-        </div>
-        <div class="photo-wrapper">
-            <img src="VœuxAvenir4.jpg" alt="Vœux d'Avenir de Maman">
         </div>
     </div>
 
@@ -446,7 +461,7 @@
             <button id="nextBtn" onclick="changeSlide(1)"  class="btn">Suiv. →</button>
         </div>
         <span id="slideCounter" class="counter-text">1 / 7</span>
-        <button onclick="triggerPrint()" class="btn btn-pdf">🖨️ imprimer PDF</button>
+        <button onclick="triggerPrint()" class="btn btn-pdf">🖨️ PDF</button>
     </nav>
 
 </div>
@@ -471,27 +486,17 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* ─────────────────────────────────────────────────────
-       IMPRESSION : on affiche TOUTES les slides d'abord,
-       puis on déclenche window.print(),
-       puis on restaure la vue normale.
-       Ça règle le problème de la page 1 blanche.
-    ───────────────────────────────────────────────────── */
     function triggerPrint() {
-        // 1. Afficher toutes les slides
         for (let i = 1; i <= total; i++) {
             const s = document.getElementById('slide-' + i);
             if (s) s.style.display = 'flex';
         }
-        // 2. Laisser le navigateur recalculer le layout
         setTimeout(function () {
             window.print();
-            // 3. Après impression, restaurer la vue courante
             setTimeout(updateUI, 300);
         }, 150);
     }
 
-    // Navigation clavier ← →
     document.addEventListener('keydown', function (e) {
         if (e.key === 'ArrowLeft')  changeSlide(-1);
         if (e.key === 'ArrowRight') changeSlide(1);
