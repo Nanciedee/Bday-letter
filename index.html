@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Histoire de ton Jour — Manuel-Harry</title>
+    <title>L'Histoire de ton Jour — Harry</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -264,16 +264,78 @@
             color:rgba(253,246,236,.5); letter-spacing:.06em;
         }
 
-         /* ══ LECTEUR MUSIQUE FLOTTANT ══ */
+        /* ══════════════════════════════════════════
+           LECTEUR MUSIQUE FLOTTANT
+        ══════════════════════════════════════════ */
         .music-player {
             position: fixed;
-            bottom: 28px; left: 28px;
+            bottom: 28px;
+            left: 28px;
             z-index: 100;
-            ...
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(6,2,20,.80);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(240,180,41,.25);
+            border-radius: 50px;
+            padding: 10px 18px 10px 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.5);
+            transition: opacity .3s;
         }
-        .music-btn { ... }
-        .music-bars span { animation: bar-bounce ... }
-        @keyframes bar-bounce { ... }
+        .music-player:hover { opacity: 1 !important; }
+
+        /* Bouton play/pause rond */
+        .music-btn {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #f0b429, #dc5629);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(240,180,41,.4);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .music-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(240,180,41,.55); }
+        .music-btn:active { transform: scale(.95); }
+
+        /* Infos piste */
+        .music-info { display: flex; flex-direction: column; gap: 2px; }
+        .music-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11pt; font-weight: 600;
+            color: #f0b429; white-space: nowrap;
+        }
+        .music-status {
+            font-size: 8pt; color: rgba(253,246,236,.45);
+            font-style: italic;
+        }
+
+        /* Barre de progression animée quand ça joue */
+        .music-bars {
+            display: flex; align-items: flex-end; gap: 3px;
+            height: 18px;
+        }
+        .music-bars span {
+            display: block; width: 3px;
+            background: rgba(240,180,41,.7);
+            border-radius: 2px;
+            animation: none;
+        }
+        .music-bars.playing span { animation: bar-bounce .8s ease-in-out infinite alternate; }
+        .music-bars span:nth-child(1) { animation-delay: 0s;    height: 8px; }
+        .music-bars span:nth-child(2) { animation-delay: .15s;  height: 14px; }
+        .music-bars span:nth-child(3) { animation-delay: .3s;   height: 10px; }
+        .music-bars span:nth-child(4) { animation-delay: .45s;  height: 16px; }
+        .music-bars span:nth-child(5) { animation-delay: .1s;   height: 6px; }
+        @keyframes bar-bounce {
+            from { transform: scaleY(.4); opacity: .6; }
+            to   { transform: scaleY(1);  opacity: 1; }
+        }
 
         @media print {
             .music-player { display: none !important; }
@@ -319,18 +381,20 @@
             .stat-label         { color:#666 !important; }
             .cover-portrait img { border-color:#8b1a4a !important; }
         }
-</style>
+    </style>
 </head>
 <body>
 
-<!-- ════ AUDIO ════ -->                          ← AJOUTÉ
+<!-- ════ AUDIO ════ -->
 <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- ════ LECTEUR FLOTTANT ════ -->              ← AJOUTÉ
+<!-- ════ LECTEUR FLOTTANT ════ -->
 <div class="music-player" id="musicPlayer">
-    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶</button>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Lecture / Pause">
+        ▶
+    </button>
     <div class="music-info">
         <span class="music-title">🎵 Musique d'anniversaire</span>
         <span class="music-status" id="musicStatus">Cliquez pour écouter</span>
@@ -356,12 +420,12 @@
         <div class="slide-content">
             <div class="cover-label">Édition Spéciale Anniversaire</div>
             <p class="cover-surtitle">L'HISTOIRE DE TON JOUR</p>
-            <h1 class="cover-name">Manuel-Harry</h1>
+            <h1 class="cover-name">HARRY</h1>
             <p class="cover-date">17 Septembre 2004 · Montréal, Canada</p>
 
             <div class="cover-row">
                 <div class="cover-intro">
-                    <p>Cher Manu,</p>
+                    <p>Cher Harry,</p>
                     <p>Bon anniversaire ! Si on remonte le temps jusqu'au jour où ton histoire a commencé, un doux vendredi 17 septembre 2004, on dirait que le ciel et la terre s'étaient donné le mot pour t'accueillir à bras ouverts, ici à Montréal.</p>
                 </div>
                 <div class="cover-portrait">
@@ -529,13 +593,16 @@
         }, 150);
     }
 
-    document.addEventListener('keydown', function (e) { ... });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft')  changeSlide(-1);
+        if (e.key === 'ArrowRight') changeSlide(1);
+    });
 
-    /* ─── LECTEUR MUSIQUE ─── */              ← AJOUTÉ
-    const audio   = document.getElementById('bgMusic');
-    const btn     = document.getElementById('musicBtn');
-    const status  = document.getElementById('musicStatus');
-    const bars    = document.getElementById('musicBars');
+    /* ─── LECTEUR MUSIQUE ─── */
+    const audio    = document.getElementById('bgMusic');
+    const btn      = document.getElementById('musicBtn');
+    const status   = document.getElementById('musicStatus');
+    const bars     = document.getElementById('musicBars');
     let   isPlaying = false;
 
     function setPlaying(play) {
@@ -546,14 +613,27 @@
     }
 
     function toggleMusic() {
-        if (isPlaying) { audio.pause(); setPlaying(false); }
-        else { audio.play().then(() => setPlaying(true)).catch(...); }
+        if (isPlaying) {
+            audio.pause();
+            setPlaying(false);
+        } else {
+            audio.play().then(() => setPlaying(true))
+                 .catch(() => {
+                     status.textContent = 'Fichier introuvable';
+                 });
+        }
     }
 
+    /* Tentative d'autoplay au chargement (souvent bloquée par le navigateur) */
     window.addEventListener('load', function () {
         audio.volume = 0.45;
-        audio.play().then(() => setPlaying(true)).catch(() => {});
+        audio.play().then(() => setPlaying(true)).catch(() => {
+            /* Autoplay bloqué → l'utilisateur clique lui-même */
+        });
     });
+
+    /* Fondu en fin de piste avant la boucle */
+    audio.addEventListener('ended', function () { setPlaying(false); });
 
     updateUI();
 </script>
